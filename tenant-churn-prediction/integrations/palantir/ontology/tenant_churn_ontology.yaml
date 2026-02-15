@@ -1,0 +1,414 @@
+# ============================================================================
+# Palantir Foundry Ontology Definition
+# Tenant Churn Prediction Domain Model
+# ============================================================================
+
+ontology:
+  name: TenantChurnOntology
+  version: 1.0.0
+  description: Entity relationships and object types for tenant churn prediction
+
+# ============================================================================
+# Object Types (Entities)
+# ============================================================================
+
+objectTypes:
+
+  # Tenant Object
+  - apiName: Tenant
+    displayName: Tenant
+    pluralDisplayName: Tenants
+    icon: user
+    primaryKey: tenantId
+    titleProperty: fullName
+
+    properties:
+      - apiName: tenantId
+        displayName: Tenant ID
+        dataType: string
+        required: true
+
+      - apiName: firstName
+        displayName: First Name
+        dataType: string
+
+      - apiName: lastName
+        displayName: Last Name
+        dataType: string
+
+      - apiName: fullName
+        displayName: Full Name
+        dataType: string
+        computed: true
+        expression: "concat(firstName, ' ', lastName)"
+
+      - apiName: email
+        displayName: Email
+        dataType: string
+        format: email
+
+      - apiName: phone
+        displayName: Phone
+        dataType: string
+
+      - apiName: annualIncome
+        displayName: Annual Income
+        dataType: decimal
+
+      - apiName: employmentStatus
+        displayName: Employment Status
+        dataType: string
+        enum: [employed, self-employed, unemployed, retired, student]
+
+      - apiName: autopayEnabled
+        displayName: Auto-Pay Enabled
+        dataType: boolean
+
+      - apiName: portalLoginCount
+        displayName: Portal Login Count
+        dataType: integer
+
+      - apiName: complaintCount
+        displayName: Complaint Count
+        dataType: integer
+
+      - apiName: status
+        displayName: Status
+        dataType: string
+        enum: [active, former, applicant, banned]
+
+  # Property Object
+  - apiName: Property
+    displayName: Property
+    pluralDisplayName: Properties
+    icon: home
+    primaryKey: propertyId
+    titleProperty: address
+
+    properties:
+      - apiName: propertyId
+        displayName: Property ID
+        dataType: string
+        required: true
+
+      - apiName: address
+        displayName: Address
+        dataType: string
+
+      - apiName: city
+        displayName: City
+        dataType: string
+
+      - apiName: state
+        displayName: State
+        dataType: string
+
+      - apiName: zipCode
+        displayName: ZIP Code
+        dataType: string
+
+      - apiName: squareFeet
+        displayName: Square Feet
+        dataType: integer
+
+      - apiName: bedrooms
+        displayName: Bedrooms
+        dataType: integer
+
+      - apiName: bathrooms
+        displayName: Bathrooms
+        dataType: decimal
+
+      - apiName: yearBuilt
+        displayName: Year Built
+        dataType: integer
+
+      - apiName: propertyType
+        displayName: Property Type
+        dataType: string
+        enum: [single-family, townhouse, condo]
+
+      - apiName: conditionRating
+        displayName: Condition Rating
+        dataType: integer
+        min: 1
+        max: 5
+
+      - apiName: locationScore
+        displayName: Location Score
+        dataType: integer
+        min: 1
+        max: 10
+
+      - apiName: latitude
+        displayName: Latitude
+        dataType: decimal
+
+      - apiName: longitude
+        displayName: Longitude
+        dataType: decimal
+
+      - apiName: geopoint
+        displayName: Location
+        dataType: geopoint
+        computed: true
+        expression: "geopoint(latitude, longitude)"
+
+  # Lease Object
+  - apiName: Lease
+    displayName: Lease
+    pluralDisplayName: Leases
+    icon: document
+    primaryKey: leaseId
+    titleProperty: leaseId
+
+    properties:
+      - apiName: leaseId
+        displayName: Lease ID
+        dataType: string
+        required: true
+
+      - apiName: startDate
+        displayName: Start Date
+        dataType: date
+
+      - apiName: endDate
+        displayName: End Date
+        dataType: date
+
+      - apiName: leaseTermMonths
+        displayName: Lease Term (Months)
+        dataType: integer
+
+      - apiName: monthlyRent
+        displayName: Monthly Rent
+        dataType: decimal
+
+      - apiName: securityDeposit
+        displayName: Security Deposit
+        dataType: decimal
+
+      - apiName: renewalStatus
+        displayName: Renewal Status
+        dataType: string
+        enum: [active, pending-renewal, renewed, not-renewed, expired]
+
+      - apiName: renewalCount
+        displayName: Renewal Count
+        dataType: integer
+
+      - apiName: status
+        displayName: Status
+        dataType: string
+        enum: [active, expired, terminated, renewed]
+
+      - apiName: daysToExpiration
+        displayName: Days to Expiration
+        dataType: integer
+        computed: true
+        expression: "daysBetween(today(), endDate)"
+
+  # ChurnPrediction Object
+  - apiName: ChurnPrediction
+    displayName: Churn Prediction
+    pluralDisplayName: Churn Predictions
+    icon: chart
+    primaryKey: predictionId
+    titleProperty: predictionId
+
+    properties:
+      - apiName: predictionId
+        displayName: Prediction ID
+        dataType: string
+        required: true
+
+      - apiName: predictionDate
+        displayName: Prediction Date
+        dataType: timestamp
+
+      - apiName: churnProbability
+        displayName: Churn Probability
+        dataType: decimal
+        min: 0
+        max: 1
+
+      - apiName: riskScore
+        displayName: Risk Score
+        dataType: integer
+        min: 0
+        max: 100
+
+      - apiName: riskLevel
+        displayName: Risk Level
+        dataType: string
+        enum: [LOW, MEDIUM, HIGH]
+
+      - apiName: predictedChurn
+        displayName: Predicted Churn
+        dataType: boolean
+
+      - apiName: modelVersion
+        displayName: Model Version
+        dataType: string
+
+      - apiName: confidence
+        displayName: Confidence
+        dataType: decimal
+
+  # RetentionAction Object
+  - apiName: RetentionAction
+    displayName: Retention Action
+    pluralDisplayName: Retention Actions
+    icon: bell
+    primaryKey: actionId
+    titleProperty: actionId
+
+    properties:
+      - apiName: actionId
+        displayName: Action ID
+        dataType: string
+        required: true
+
+      - apiName: actionType
+        displayName: Action Type
+        dataType: string
+        enum: [email-campaign, phone-call, incentive-offer, property-manager-visit, rent-adjustment]
+
+      - apiName: triggeredAt
+        displayName: Triggered At
+        dataType: timestamp
+
+      - apiName: status
+        displayName: Status
+        dataType: string
+        enum: [pending, completed, failed]
+
+      - apiName: outcome
+        displayName: Outcome
+        dataType: string
+
+      - apiName: notes
+        displayName: Notes
+        dataType: string
+
+      - apiName: costOfAction
+        displayName: Cost of Action
+        dataType: decimal
+
+# ============================================================================
+# Link Types (Relationships)
+# ============================================================================
+
+linkTypes:
+
+  - apiName: TenantHasLease
+    displayName: Has Lease
+    objectTypeA: Tenant
+    objectTypeB: Lease
+    cardinality: ONE_TO_MANY
+
+  - apiName: LeaseForProperty
+    displayName: For Property
+    objectTypeA: Lease
+    objectTypeB: Property
+    cardinality: MANY_TO_ONE
+
+  - apiName: LeaseHasPrediction
+    displayName: Has Prediction
+    objectTypeA: Lease
+    objectTypeB: ChurnPrediction
+    cardinality: ONE_TO_MANY
+
+  - apiName: PredictionTriggersAction
+    displayName: Triggers Action
+    objectTypeA: ChurnPrediction
+    objectTypeB: RetentionAction
+    cardinality: ONE_TO_MANY
+
+  - apiName: TenantReceivedAction
+    displayName: Received Action
+    objectTypeA: Tenant
+    objectTypeB: RetentionAction
+    cardinality: ONE_TO_MANY
+
+# ============================================================================
+# Action Types (Functions/Workflows)
+# ============================================================================
+
+actionTypes:
+
+  - apiName: PredictChurn
+    displayName: Predict Churn Risk
+    description: Generate churn prediction for a lease
+    appliesTo: [Lease]
+    parameters:
+      - apiName: includeExplanation
+        displayName: Include Explanation
+        dataType: boolean
+        defaultValue: true
+    returns:
+      dataType: ChurnPrediction
+
+  - apiName: TriggerRetentionWorkflow
+    displayName: Trigger Retention Workflow
+    description: Automatically trigger retention actions based on risk level
+    appliesTo: [Lease, ChurnPrediction]
+    parameters:
+      - apiName: riskThreshold
+        displayName: Risk Threshold
+        dataType: integer
+        defaultValue: 80
+    returns:
+      dataType: RetentionAction
+
+  - apiName: SendRetentionEmail
+    displayName: Send Retention Email
+    description: Send personalized retention email to tenant
+    appliesTo: [Tenant, Lease]
+    parameters:
+      - apiName: emailTemplate
+        displayName: Email Template
+        dataType: string
+        enum: [high-risk, medium-risk, low-risk, incentive-offer]
+    returns:
+      dataType: RetentionAction
+
+  - apiName: CalculateROI
+    displayName: Calculate Retention ROI
+    description: Calculate return on investment for retention campaigns
+    appliesTo: [RetentionAction]
+    returns:
+      dataType: decimal
+
+# ============================================================================
+# Metrics
+# ============================================================================
+
+metrics:
+
+  - apiName: TotalHighRiskLeases
+    displayName: Total High-Risk Leases
+    description: Count of leases with HIGH risk level
+    aggregation: COUNT
+    filters:
+      - property: riskLevel
+        value: HIGH
+
+  - apiName: AverageRiskScore
+    displayName: Average Risk Score
+    description: Mean risk score across all predictions
+    aggregation: AVERAGE
+    property: riskScore
+
+  - apiName: ChurnRate
+    displayName: Churn Rate
+    description: Percentage of leases that did not renew
+    aggregation: RATIO
+    numerator: churned
+    denominator: total
+
+  - apiName: RetentionCampaignROI
+    displayName: Retention Campaign ROI
+    description: Return on investment for retention campaigns
+    aggregation: CUSTOM
+    formula: "(turnoversAvoided * 4000 - campaignCosts) / campaignCosts * 100"
