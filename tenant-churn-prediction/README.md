@@ -61,8 +61,8 @@ AI-powered tenant retention platform for single-family rental property managemen
 
 ```bash
 # Clone repository
-git clone https://github.com/polarisaistudio/tenant-churn-prediction.git
-cd tenant-churn-prediction
+git clone https://github.com/polarisaistudio/tenant-prediction.git
+cd tenant-prediction
 
 # Copy environment templates
 cp .env.example .env
@@ -219,10 +219,10 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for development setup, coding standards, an
 
 ## License
 
-Proprietary - Polaris AI Studio
+MIT License — see [LICENSE](LICENSE) for details.
 
 ## Support
 
 - Documentation: [docs/](docs/)
-- Issues: https://github.com/polarisaistudio/tenant-churn-prediction/issues
+- Issues: https://github.com/polarisaistudio/tenant-prediction/issues
 - Email: support@polarisaistudio.com
